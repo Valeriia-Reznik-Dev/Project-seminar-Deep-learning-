@@ -1,0 +1,6 @@
+# Segmentation dependencies.
+# Detectron2 (instance segmentation, Mask R-CNN) -- install matching your torch:
+#   python -m pip install 'git+https://github.com/facebookresearch/detectron2.git'
+# (see https://detectron2.readthedocs.io/tutorials/install.html for prebuilt wheels)
+torch>=1.13
+torchvision>=0.14

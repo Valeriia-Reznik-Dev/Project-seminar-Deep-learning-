@@ -1,0 +1,24 @@
+# Segmentation combo: Detectron2 Mask R-CNN (switchable like a detector) +
+# OSNet ReID with background-masked crops.
+name: seg_maskrcnn_osnet
+
+detector:
+  type: detectron2
+  config_file: COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml
+  weights: null              # null -> detectron2 model zoo checkpoint
+  min_confidence: 0.5
+  device: cuda
+
+reid:
+  type: torchreid
+  model_name: osnet_x1_0
+  model_path: ""
+  device: cuda
+
+tracker:
+  max_cosine_distance: 0.2
+  nn_budget: 100
+  nms_max_overlap: 1.0
+  min_confidence: 0.5
+  min_detection_height: 0
+  use_segmentation_crops: true   # zero background of ReID crops via masks

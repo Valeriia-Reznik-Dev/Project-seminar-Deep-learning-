@@ -7,7 +7,7 @@ dependencies is enough to use it (avoids torch/mmcv/nanodet version clashes).
 """
 from __future__ import annotations
 
-AVAILABLE = ("yolo", "nanodet", "mmdet")
+AVAILABLE = ("yolo", "nanodet", "mmdet", "detectron2")
 
 
 def build_detector(cfg: dict):
@@ -22,4 +22,7 @@ def build_detector(cfg: dict):
     if kind == "mmdet":
         from .mmdet import MMDetDetector
         return MMDetDetector(**cfg)
+    if kind == "detectron2":  # segmentation model, switchable like a detector
+        from ..segmentation.detectron2_seg import Detectron2Seg
+        return Detectron2Seg(**cfg)
     raise ValueError(f"unknown detector type {kind!r}; available: {AVAILABLE}")

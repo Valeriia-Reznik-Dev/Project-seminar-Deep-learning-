@@ -35,6 +35,7 @@ from application_util import preprocessing           # noqa: E402
 class ModernDeepSort:
     def __init__(self, detector, reid, max_cosine_distance=0.2, nn_budget=100,
                  nms_max_overlap=1.0, min_confidence=0.3, min_detection_height=0,
+                 use_segmentation_crops=False,
                  identity_db=None, time_window=30):
         self.detector = detector
         self.reid = reid
@@ -43,6 +44,8 @@ class ModernDeepSort:
         self.min_detection_height = min_detection_height
         self.max_cosine_distance = max_cosine_distance
         self.nn_budget = nn_budget
+        # Stage 6: zero the background of ReID crops using segmentation masks
+        self.use_segmentation_crops = use_segmentation_crops
         # Additional task (Stage 7): optional standalone identity resolver
         self.identity_db = identity_db
         self.time_window = time_window
@@ -70,6 +73,7 @@ class ModernDeepSort:
             frame = cv2.imread(path)
 
             # 1) detections (live detector, or GT boxes in ReID-only mode)
+            masks = None
             if gt_boxes_by_frame is not None:
                 boxes = np.asarray(gt_boxes_by_frame.get(frame_idx,
                                    np.zeros((0, 4))), float).reshape(-1, 4)
@@ -82,17 +86,23 @@ class ModernDeepSort:
                     else np.zeros((0, 4))
                 scores = np.array([d.confidence for d in dets], float) if dets \
                     else np.zeros(0)
+                if self.use_segmentation_crops and dets:
+                    masks = [d.mask for d in dets]
 
-            # height + confidence filter
+            # height + confidence filter (keep masks aligned)
             if len(boxes):
                 keep = (boxes[:, 3] >= self.min_detection_height) & \
                        (scores >= self.min_confidence)
                 boxes, scores = boxes[keep], scores[keep]
+                if masks is not None:
+                    masks = [m for m, k in zip(masks, keep) if k]
 
-            # 2) appearance descriptors
+            # 2) appearance descriptors (optionally background-masked)
             if len(boxes):
+                use_masks = (masks is not None and any(m is not None for m in masks))
                 t0 = time.time()
-                features = self.reid.extract(frame, boxes)
+                features = self.reid.extract(frame, boxes,
+                                             masks=masks if use_masks else None)
                 t_infer += time.time() - t0
             else:
                 features = np.zeros((0, getattr(self.reid, "feature_dim", 512)))

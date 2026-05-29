@@ -16,6 +16,7 @@ import numpy as np
 class Detection:
     tlwh: np.ndarray          # (4,) [x, y, w, h]
     confidence: float
+    mask: np.ndarray | None = None  # optional full-frame bool mask (segmentation)
 
     @property
     def tlbr(self) -> np.ndarray:

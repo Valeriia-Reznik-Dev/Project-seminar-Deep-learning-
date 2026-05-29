@@ -42,7 +42,8 @@ def main():
                           nn_budget=tp.get("nn_budget", 100),
                           nms_max_overlap=tp.get("nms_max_overlap", 1.0),
                           min_confidence=tp.get("min_confidence", 0.3),
-                          min_detection_height=tp.get("min_detection_height", 0))
+                          min_detection_height=tp.get("min_detection_height", 0),
+                          use_segmentation_crops=tp.get("use_segmentation_crops", False))
 
     timing = {}
     for seq in sorted(d for d in os.listdir(args.mot_root)
