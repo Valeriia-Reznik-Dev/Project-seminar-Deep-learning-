@@ -1,0 +1,10 @@
+# Detector dependencies. Install only what you use (versions can clash).
+# Source #1 (Ultralytics YOLOv8) -- the default, easiest in Colab:
+ultralytics>=8.0.0
+torch>=1.13
+torchvision>=0.14
+
+# Source #2 (NanoDet) -- install from the repo:
+#   git clone https://github.com/RangiLyu/nanodet && pip install -e nanodet
+# Source #3 (MMDetection) -- via openmim:
+#   pip install -U openmim && mim install mmengine "mmcv>=2.0.0" "mmdet>=3.0.0"
