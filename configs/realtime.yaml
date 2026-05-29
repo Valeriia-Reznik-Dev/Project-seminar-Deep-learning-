@@ -1,0 +1,22 @@
+# Real-time combo (target >= 5 FPS in Colab, beats the original baseline).
+name: realtime_yolov8n_osnet
+
+detector:
+  type: yolo
+  weights: yolov8n.pt        # light, fast
+  min_confidence: 0.3
+  device: cuda
+  imgsz: 640
+
+reid:
+  type: torchreid
+  model_name: osnet_x1_0     # light appearance descriptor
+  model_path: ""             # "" -> torchreid downloads pretrained weights
+  device: cuda
+
+tracker:
+  max_cosine_distance: 0.2
+  nn_budget: 100
+  nms_max_overlap: 1.0
+  min_confidence: 0.3
+  min_detection_height: 0

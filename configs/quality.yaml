@@ -1,0 +1,23 @@
+# Quality combo (higher accuracy, lower FPS) - for the quality/accuracy point
+# in the parameter-evolution study.
+name: quality_yolov8m_resnet50ibn
+
+detector:
+  type: yolo
+  weights: yolov8m.pt        # more accurate, slower
+  min_confidence: 0.25
+  device: cuda
+  imgsz: 1280
+
+reid:
+  type: torchreid
+  model_name: resnet50_ibn_a # stronger appearance descriptor
+  model_path: ""
+  device: cuda
+
+tracker:
+  max_cosine_distance: 0.25
+  nn_budget: 100
+  nms_max_overlap: 1.0
+  min_confidence: 0.25
+  min_detection_height: 0
