@@ -1,0 +1,9 @@
+# Core requirements shared by the modern pipeline (detectors/ReID added later
+# per-stage in their own requirement files to avoid torch/CUDA version clashes).
+numpy>=1.23,<2.0
+scipy>=1.9
+opencv-python>=4.6
+scikit-learn>=1.1
+pandas>=1.5
+tqdm>=4.64
+pyyaml>=6.0

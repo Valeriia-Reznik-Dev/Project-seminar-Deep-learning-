@@ -1,0 +1,8 @@
+# Requirements to reproduce the ORIGINAL (unmodified) DeepSORT baseline.
+# The original appearance descriptor (mars-small128.pb) is a frozen TF graph,
+# loaded through tf.compat.v1 -> works with TensorFlow 2.x.
+numpy>=1.23,<2.0
+scipy>=1.9
+opencv-python>=4.6
+scikit-learn>=1.1
+tensorflow>=2.10,<2.16

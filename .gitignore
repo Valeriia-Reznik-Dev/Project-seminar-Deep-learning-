@@ -87,3 +87,10 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# --- Modern DeepSORT project: large/derived artifacts (not versioned) ---
+data/            # MOT sequences + zips
+weights/         # model checkpoints (mars-small128.pb, yolo, reid, ...)
+results/         # tracker outputs, detection caches, HOTA reports
+overlays/*/*.mp4 # rendered overlay videos
+overlays/*/*.avi
