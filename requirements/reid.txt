@@ -1,0 +1,9 @@
+# ReID dependencies. Install only what you use.
+# Source #1 (torchreid) -- the default:
+torch>=1.13
+torchvision>=0.14
+torchreid>=1.4.0        # pip install torchreid  (or git+https://github.com/KaiyangZhou/deep-person-reid)
+
+# Source #2 (FastReID) -- from the repo:
+#   git clone https://github.com/JDAI-CV/fast-reid && pip install -r fast-reid/docs/requirements.txt
+#   then add fast-reid to PYTHONPATH
