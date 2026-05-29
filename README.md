@@ -70,9 +70,38 @@ python scripts/run_baseline.py \
 
 HOTA scoring of `results/baseline/` is wired up in **Stage 2** (TrackEval).
 
+## Run everything (Colab)
+
+Open [notebooks/colab.ipynb](notebooks/colab.ipynb) on a GPU runtime and run
+top to bottom: it installs deps, downloads data + models, reproduces the
+baseline, selects detector/ReID, runs the real-time / quality / segmentation /
+identity-DB configurations, sweeps parameters, scores HOTA, and renders
+overlays. Fill the result tables in [report/report.md](report/report.md) with
+the printed numbers.
+
+## Configurations
+
+| Config | Detector | ReID | Notes |
+|---|---|---|---|
+| [realtime](configs/realtime.yaml) | YOLOv8n | OSNet | ≥ 5 FPS target |
+| [quality](configs/quality.yaml) | YOLOv8m | ResNet50-IBN | higher HOTA |
+| [segmentation](configs/segmentation.yaml) | Mask R-CNN | OSNet (masked crops) | +1 segmentation |
+| [additional](configs/additional.yaml) | YOLOv8n | OSNet + identity DB (ResNet50-IBN) | Additional task |
+
+```bash
+python scripts/run_tracker.py --config configs/realtime.yaml --score
+python scripts/sweep_params.py --config configs/realtime.yaml \
+    --param max_cosine_distance --values 0.1,0.2,0.3,0.4
+python scripts/render_overlay.py --seq_dir data/mot/MOT16-09 \
+    --results results/realtime_yolov8n_osnet/MOT16-09.txt \
+    --out overlays/best/MOT16-09.mp4
+```
+
 ## Status
 
 See the staged roadmap in [PLAN.md](PLAN.md). Heavy runs (model inference,
-HOTA over all sequences) are intended to run in the provided Colab notebook
-with a GPU; the code here is structured so the same entry points work locally
-and in Colab.
+HOTA over all sequences) run in the Colab notebook with a GPU; the code here is
+structured so the same entry points work locally and in Colab. The pipeline,
+metrics, integration with the original core, segmentation mask path, identity
+database and overlay renderer are all unit/smoke-tested locally with dummy
+models.
