@@ -36,8 +36,12 @@ def main():
 
     detector = build_detector(cfg["detector"])
     reid = build_reid(cfg["reid"])
+    identity_db = None
+    if cfg.get("identity"):
+        from modern_deepsort.identity import build_identity_db
+        identity_db = build_identity_db(cfg["identity"])
     tp = cfg.get("tracker", {})
-    pipe = ModernDeepSort(detector, reid,
+    pipe = ModernDeepSort(detector, reid, identity_db=identity_db,
                           max_cosine_distance=tp.get("max_cosine_distance", 0.2),
                           nn_budget=tp.get("nn_budget", 100),
                           nms_max_overlap=tp.get("nms_max_overlap", 1.0),

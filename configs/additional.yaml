@@ -1,0 +1,36 @@
+# Additional task: real-time tracker + standalone body-ReID identity database.
+# The identity DB uses its OWN ReID model (here a different backbone than the
+# tracker's) to re-identify people across track fragmentations.
+name: additional_yolov8n_osnet_identitydb
+
+detector:
+  type: yolo
+  weights: yolov8n.pt
+  min_confidence: 0.3
+  device: cuda
+  imgsz: 640
+
+reid:                      # tracker appearance descriptor
+  type: torchreid
+  model_name: osnet_x1_0
+  model_path: ""
+  device: cuda
+
+identity:                  # standalone body-ReID identity database
+  radius: 0.30             # max cosine distance to accept an existing identity
+  k: 5                     # neighbours for the knn policy
+  window: 30               # T (frames) for majority-vote identity resolution
+  max_cluster: 50          # cap descriptors per identity
+  policy: centroid         # 'centroid' or 'knn'
+  reid:                    # may differ from the tracker's ReID (here ResNet50-IBN)
+    type: torchreid
+    model_name: resnet50_ibn_a
+    model_path: ""
+    device: cuda
+
+tracker:
+  max_cosine_distance: 0.2
+  nn_budget: 100
+  nms_max_overlap: 1.0
+  min_confidence: 0.3
+  min_detection_height: 0
